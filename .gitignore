@@ -1,18 +1,20 @@
-# 构建产物
+# 鏋勫缓浜х墿
 dist/
 *.zip
 
-# 编译出来的启动器（从 src/Launcher.cs 生成）
-关窗.exe
+# 缂栬瘧鍑烘潵鐨勫惎鍔ㄥ櫒锛堜粠 src/Launcher.cs 鐢熸垚锛?鍏崇獥.exe
 *.exe
 
-# 运行时日志
-*.log
+# 杩愯鏃舵棩蹇?*.log
 last-run.log
 
-# 编辑器 / 系统
+# 缂栬緫鍣?/ 绯荤粺
 .vs/
 .vscode/
 *.user
 Thumbs.db
 desktop.ini
+
+# Python
+__pycache__/
+*.pyc
