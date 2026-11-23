@@ -1,16 +1,33 @@
 # 关窗 · close-all-windows
 
+**一键关掉 Windows 上所有打开的窗口** · Close all open windows on Windows with one click
+
 [中文](#中文) | [English](#english)
 
-![关窗](assets/icon-preview.png)
+![演示：点一下图标，所有窗口依次关闭](assets/demo.gif)
 
-**一键关掉 Windows 上所有打开的窗口。** 双击图标（或按 `Ctrl + Alt + Shift + Q`），
-屏幕上所有窗口在 1–2 秒内关闭，全程不弹提示、不弹 UAC。
-
-给「同时开了一堆窗口、想立刻收摊」的人用：下班、开会、切换任务、给家人让电脑。
+双击图标（或按 `Ctrl + Alt + Shift + Q`），屏幕上所有窗口在 1–2 秒内关闭，
+全程不弹提示、不弹 UAC。给「同时开了一堆窗口、想立刻收摊」的人用：
+下班、开会、切换任务、给家人让电脑。
 
 > 关闭方式是给每个窗口发送标准的 `WM_CLOSE`（等同于点窗口右上角的 ×），
 > 所以**有未保存内容的程序仍会自己弹出「是否保存」**，不会悄悄丢数据。
+
+## 和现成方案比，为什么还要这一个
+
+| | **关窗**（本项目） | CloseAll（NTWind） | 网上流传的 AutoHotkey / PS 脚本 |
+|---|---|---|---|
+| 授权与源码 | MIT，全部源码可改 | 免费，闭源 | 开源但散落各处，质量参差 |
+| 界面 | 中文，可选「先看再关」确认框 | 英文 / 德文，列表勾选 | 多数没有界面 |
+| 每次运行弹 UAC | **不弹**（安装时注册提权计划任务） | 要关管理员窗口就得提权 | 常见：每次弹，或要求始终以管理员运行 |
+| 关闭方式 | 逐个 `WM_CLOSE`，等同点 × | 未公开 | 常见做法是 `taskkill` 直接杀进程 |
+| 数据安全 | 程序会照常弹「是否保存」 | 同左 | 杀进程不给提示，**可能丢数据** |
+| 安装 | 一键安装包 + 卸载器 | 安装程序 | 需自装 AutoHotkey 或自己编译 |
+| 上手成本（中文用户） | 装完即用 | 要读英文界面 | 基本得懂脚本 |
+
+> 说句实话：**如果你只想要「关窗口」这一个动作，CloseAll 或一个 AHK 脚本就够用。**
+> 这个项目盯的是另外三件事：① 双击后不再弹 UAC；② 默认只发关闭消息、绝不杀进程；
+> ③ 全部源码可见可改，界面是中文的。对比基于公开资料与同类脚本的常见做法整理，仅供参考。
 
 ---
 
@@ -24,6 +41,15 @@
 
 > 如果 Windows 提示「已保护你的电脑」，点 **更多信息 → 仍要运行**
 > （原因见下方「为什么会被杀毒软件 / SmartScreen 拦」）。
+
+#### 国内网络下载很慢 / 直接失败
+
+Release 附件走 `objects.githubusercontent.com`，国内经常超时或被重置，不是文件坏了。两个办法：
+
+1. **重试**：浏览器里多点几次「重新下载」，大概率能过（我实测第 3 次成功）。
+2. **加速前缀**（第三方服务，非本项目维护，自行判断是否使用）：
+   在下载链接前面拼一段，例如
+   `https://ghfast.top/https://github.com/jikk2009/close-all-windows/releases/download/v1.0.0/guanchuang-1.0.0.zip`
 
 ### 使用
 
@@ -94,6 +120,8 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\build\build.ps1
 `assets\closeall.ico` 与预览图（需要 Pillow），再跑一次 build 即可。
 
 ### 图标
+
+![图标](assets/icon-preview.png)
 
 `assets\closeall.ico` 是**纯代码绘制的原创图标**（暖橙渐变 + 白色窗口 + 红色关闭角标），
 不含第三方素材，生成脚本就是 `build\make-icon.py`，与程序同样以 MIT 许可发布，可随意修改。
@@ -166,6 +194,10 @@ window (same as clicking the ×), so apps with unsaved work still show their own
 - **Build:** `powershell -NoProfile -ExecutionPolicy Bypass -File .\build\build.ps1`
   (uses the `csc.exe` shipped with .NET Framework).
 - Windows 10/11 only. MIT licensed.
+- **Why this one:** no UAC prompt on each run (it runs a pre-registered, highest-privilege
+  scheduled task), it only sends `WM_CLOSE` so apps still prompt to save, and it never
+  force-kills processes or `explorer.exe`. The animation at the top is a code-drawn mockup,
+  not a screen recording.
 
 > The UI and docs are in Chinese (the tool was built for a Chinese-speaking user). Code and
 > comments are in Chinese too, but the mechanics are simple: `src/CloseAllWindows.ps1` is the
@@ -178,10 +210,13 @@ window (same as clicking the ×), so apps with unsaved work still show their own
 ```
 src/        真正的程序（PowerShell + 内联 C#）
 installer/  安装 / 卸载 / 修复计划任务
-assets/     图标与截图
-build/      一键构建安装包
+assets/     图标、截图与演示动画
+build/      一键构建安装包；图标（make-icon.py）与演示动画（make-demo.py）的生成脚本
 docs/       给最终用户看的纯文本说明
 ```
+
+> 顶部的演示动画是 `build/make-demo.py` 用代码逐帧画出来的**示意图**，不是真实录屏——
+> 这样不会把制作时桌面上的私人窗口和文件录进去。
 
 ## 免责声明
 
