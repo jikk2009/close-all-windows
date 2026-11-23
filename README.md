@@ -18,7 +18,7 @@
 
 ### 安装（3 步，不需要懂编程）
 
-1. 到 [Releases](../../releases/latest) 下载 `关窗-安装包.zip`，解压到任意位置（桌面也行）。
+1. 到 [Releases](../../releases/latest) 下载 `guanchuang-1.0.0.zip`，解压到任意位置（桌面也行）。
 2. 右键 `安装.cmd` → **以管理员身份运行**（会弹一次 UAC，点是）。
 3. 看到「安装完成」就好了：桌面和开始菜单里出现「关窗」。
 
@@ -157,7 +157,7 @@ Double-click the icon (or press `Ctrl + Alt + Shift + Q`) and all visible applic
 closed within a second or two — no dialog, no UAC prompt. It sends a standard `WM_CLOSE` to each
 window (same as clicking the ×), so apps with unsaved work still show their own save prompt.
 
-- **Install:** download `关窗-安装包.zip` from [Releases](../../releases/latest), extract,
+- **Install:** download `guanchuang-1.0.0.zip` from [Releases](../../releases/latest), extract,
   right-click `安装.cmd` → *Run as administrator*.
 - **Why no UAC every time:** the installer registers a scheduled task (`OneClickCloseAll`,
   highest privileges, interactive logon only, no trigger); the tiny `关窗.exe` just runs that task.
